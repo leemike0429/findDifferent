@@ -1,0 +1,196 @@
+body {
+    /* overflow: hidden; */
+    background: url(../images/LobbyBanner.jpg ) no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+.wrap {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 50px;
+}
+
+h1 {
+    text-align: center;
+    text-shadow: 2px 4px 3px rgb(75 110 91);
+    font-size: 80px !important;
+    font-weight: 600 !important;
+    letter-spacing: 30px;
+    color: #ecd1d1;
+    background-color: transparent;
+    background-color: transparent;
+    /* margin-bottom: 50px; */
+}
+
+h3 {
+    position: absolute;
+    margin-right: 20px;
+    color: white;
+    font-weight: 900;
+    text-shadow: 2px 4px 3px rgb(75 110 91);
+    background-color: #f9d3d7;
+    border-radius: 5px;
+    padding: 0px 10px;
+}
+
+*[class^="col-"] {
+    display: flex;
+    justify-content: center;
+}
+
+.perspective {
+    background: url("../images/doorBorder.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    display: inline;
+    float: left;
+    height: 274px;
+    width: 147px;
+    margin: 20px;
+    margin-left: 0px;
+    -webkit-perspective: 450;
+    border-radius: 3px;
+    box-sizing: border-box;
+    animation: upAndDown 2s infinite linear;
+}
+
+.thumb {
+    z-index: 1;
+    background: url("../images/ClassDoor.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 147px;
+    height: 274px;
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 3px;
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, .0) inset;
+    transition: 1s transform linear;
+    transform-origin: 25px;
+    cursor: pointer;
+}
+
+    .thumb span {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -147%);
+        padding: 2px 40px;
+        font-weight: 900;
+        font-size: 30px;
+    }
+
+.thumbOpened {
+    transform: rotateY(-120deg);
+    transform-origin: 25px;
+    transition: .8s linear;
+}
+
+.doors {
+    display: flex;
+    overflow-y: hidden;
+}
+
+.door_scroll {
+    overflow-x: scroll;
+}
+
+.doors::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(221, 183, 183, 0.3);
+    background-color: #F5F5F5;
+}
+
+.doors::-webkit-scrollbar {
+    width: 6px;
+    background-color: #F5F5F5;
+}
+
+.doors::-webkit-scrollbar-thumb {
+    background-color: rgb(141, 79, 38);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, color-stop(.5, rgba(255, 255, 255, .2)), color-stop(.5, transparent), to(transparent));
+}
+
+.door_shadow {
+    width: 100px;
+    height: 20px;
+    background: linear-gradient(0.25turn, #383b3ba6, #737571, #1a1816a6);
+    box-shadow: 0 0 10px rgb(92, 91, 91);
+    position: absolute;
+    bottom: 20px;
+    margin-right: 20px;
+    border-radius: 50%;
+    animation: shadow 3s infinite linear;
+}
+
+.lighting {
+    background: whitesmoke;
+    position: absolute;
+    left: 24%;
+    top: 17%;
+    width: 80px;
+    height: 182px;
+    animation: shine 1.4s infinite linear;
+}
+
+@keyframes shine {
+    0% {
+        box-shadow: 0px 0px 26px #fff, 0px 0px 18px #fff, 0px 0px 6px #fff, 0px 0px 2px #fff;
+    }
+
+    50% {
+        box-shadow: 0px 0px 6px #fff, 0px 0px 4px #fff, 0px 0px 6px #fff, 0px 0px 2px #fff, inset 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    100% {
+        box-shadow: 0px 0px 26px #fff, 0px 0px 18px #fff, 0px 0px 6px #fff, 0px 0px 2px #fff;
+    }
+}
+
+@keyframes go {
+    100% {
+        opacity: 1;
+        transform: rotateY(0deg);
+    }
+}
+
+@keyframes upAndDown {
+    0% {
+        transform: translate(0px, 0px);
+    }
+
+    25% {
+        transform: translate(0px, 10px);
+    }
+
+    50% {
+        transform: translate(0px, 0px);
+    }
+
+    75% {
+        transform: translate(0px, -10px);
+    }
+
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+
+@keyframes shadow {
+    0% {
+        width: 100px;
+        height: 20px;
+    }
+
+    50% {
+        width: 50px;
+        height: 10px;
+    }
+
+    100% {
+        width: 100px;
+        height: 20px;
+    }
+}
