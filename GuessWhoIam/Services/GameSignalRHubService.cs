@@ -49,17 +49,17 @@ namespace GuessWhoIam.Services
 
       string groupName = playerRoom.RoomId;
 
-      await Clients.Group(groupName).SendAsync("UserLeave", player.Name);
+      await Clients.Group(groupName).SendAsync("UserLeave", player.Id);
 
       if(playerRoom.Room.GetList().Count != 0)
       {
-        await Clients.Group(groupName).SendAsync("GetWaitingUsers", playerRoom.Room.GetList().Select(x => new { name = x.Name }).ToList());
+        await Clients.Group(groupName).SendAsync("GetWaitingUsers", playerRoom.Room.GetList().Select(x => new { id = x.Id }).ToList());
       }
     }
 
-    public async Task Connection(string groupName, string userName)
+    public async Task Connection(string groupName, int? index)
     {
-      if (string.IsNullOrEmpty(groupName)|| string.IsNullOrEmpty(userName) || groupName == "undefined" || userName == "undefined")
+      if (string.IsNullOrEmpty(groupName)|| groupName == "undefined" || index == null)
       {
         throw new Exception("不正常連線");
       }
@@ -67,7 +67,7 @@ namespace GuessWhoIam.Services
       var player = new PlayerModel
       {
         ConnectId = Context.ConnectionId,
-        Name = userName
+        Id = (int)index
       };
 
       var room = _roomList.SearchRoom(groupName);
@@ -80,9 +80,9 @@ namespace GuessWhoIam.Services
 
       await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-      await Clients.Group(groupName).SendAsync("UserJoin", userName);
+      await Clients.Group(groupName).SendAsync("UserJoin", (int)index);
 
-      await Clients.Group(groupName).SendAsync("GetWaitingUsers", room.Room.GetList().Select(x => new { name = x.Name }).ToList());
+      await Clients.Group(groupName).SendAsync("GetWaitingUsers", room.Room.GetList().Select(x => new { id = x.Id }).ToList());
     }
 
     public async Task StartGame(string groupName)

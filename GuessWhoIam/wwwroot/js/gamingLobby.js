@@ -9,6 +9,7 @@
         $(".thumb").removeClass("thumbOpened");
         y.addClass("thumbOpened");
     }
+    console.log(y)
 }
 
 
@@ -62,8 +63,6 @@ var gamingLobby = new Vue({
 
                 return
             }
-
-            // Push the name to submitted names
             this.submittedNames.push(this.name)
             // Hide the modal manually
             this.$nextTick(() => {

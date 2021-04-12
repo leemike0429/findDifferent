@@ -22,47 +22,49 @@
 </head>
 
 <body>
+    <section class="section_lobby">
+        <div class="wrap" id="app">
 
-    <div class="wrap" id="app">
+            <div class="container">
+                <h1>遊戲大廳</h1>
+                <div class="row">
+                    <div class="col-12">
+                        <div>
+                            <b-button v-b-modal.modal-prevent-closing class="mb-5">創建房間</b-button>
 
-        <div class="container">
-            <h1>遊戲大廳</h1>
-            <div class="row">
-                <div class="col-12">
-                    <div>
-                        <b-button v-b-modal.modal-prevent-closing class="mb-5">創建房間</b-button>
-
-                        <b-modal id="modal-prevent-closing" ref="modal" title="建立你的房間名字" @show="resetModal" @hidden="resetModal" @ok="handleOk">
-                            <form ref="form" @submit.stop.prevent="handleSubmit">
-                                <b-form-group label="房名" label-for="name-input" :invalid-feedback="warningWord" :state="nameState">
-                                    <b-form-input id="name-input" v-model="name" :state="nameState" required></b-form-input>
-                                </b-form-group>
-                            </form>
-                        </b-modal>
-                    </div>
-                </div>
-            </div>
-
-            <div class="doors" id="door">
-
-
-                <div class="col-12 col-md-4 col-lg-3" v-for="name in submittedNames">
-                    <h3>{{name}}</h3>
-                    <div class="perspective" onclick="openDoor(this)">
-                        <div class="thumb">
-                            <span>0</span>
+                            <b-modal id="modal-prevent-closing" ref="modal" title="建立你的房間名字" @show="resetModal" @hidden="resetModal" @ok="handleOk">
+                                <form ref="form" @submit.stop.prevent="handleSubmit">
+                                    <b-form-group label="房名" label-for="name-input" :invalid-feedback="warningWord" :state="nameState">
+                                        <b-form-input id="name-input" v-model="name" :state="nameState" required></b-form-input>
+                                    </b-form-group>
+                                </form>
+                            </b-modal>
                         </div>
-                        <div class="lighting"></div>
-
                     </div>
-                    <div class="door_shadow"></div>
                 </div>
 
+                <div class="doors" id="door">
 
+
+                    <div class="col-12 col-md-4 col-lg-3" v-for="name in submittedNames">
+                        <h3>{{name}}</h3>
+                        <div class="perspective" onclick="openDoor(this)">
+                            <div class="thumb">
+                                <span>0</span>
+                            </div>
+                            <div class="lighting"></div>
+
+                        </div>
+                        <div class="door_shadow"></div>
+                    </div>
+
+
+                </div>
             </div>
-        </div>
 
-    </div>
+        </div>
+    </section>
+    
 
 
 

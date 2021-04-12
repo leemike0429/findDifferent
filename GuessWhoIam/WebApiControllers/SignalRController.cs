@@ -36,7 +36,7 @@ namespace GuessWhoIam.WebApiControllers
     [HttpPost]
     public async Task GetBugStatus(PlayerModel bug)
     {
-      await _countHub.Clients.Groups(bug.RoomId).SendAsync("GetBugStatus", bug.Name, bug.Id);
+      await _countHub.Clients.Groups(bug.RoomId).SendAsync("GetBugStatus", bug.Name, bug.BugId);
     }
     [HttpPost]
     public async Task Send(PlayerModel msg)
@@ -56,7 +56,7 @@ namespace GuessWhoIam.WebApiControllers
     [HttpPost]
     public async Task PrePare(PlayerModel player)
     {
-      await _countHub.Clients.Groups(player.RoomId).SendAsync("Prepare", player.Name, player.Status);
+      await _countHub.Clients.Groups(player.RoomId).SendAsync("Prepare", player.Id, player.Status);
     }
 
     [HttpPost]

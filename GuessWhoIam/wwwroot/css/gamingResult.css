@@ -1,5 +1,11 @@
-[v-cloak]{
-    display:none;
+@import url('https://fonts.googleapis.com/css2?family=New+Tegomin&display=swap');
+
+[v-cloak] {
+    display: none;
+}
+
+* {
+    font-family: 'New Tegomin', serif !important;
 }
 body {
     overflow: hidden;
@@ -24,6 +30,7 @@ h1 {
     top: 10%;
     left: 50%;
     transform: translate(-50%, 0%);
+    font-family: 'New Tegomin', serif !important;
 }
 
 input {
@@ -120,6 +127,9 @@ canvas {
     }
 }
 
+tbody tr th i {
+    font-family: "Font Awesome 5 Free" !important;
+}
 tbody tr:first-child th i {
     color: goldenrod;
 }

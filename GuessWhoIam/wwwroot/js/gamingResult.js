@@ -64,7 +64,6 @@ var gmaeResult = new Vue({
 
       //前三名
       this.preThirdArr = this.copyArrForPreThird.splice(0, 3);
-      console.log(this.preThirdArr[2].name_en)
     }
   }
 })

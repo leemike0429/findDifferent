@@ -63,7 +63,7 @@ namespace GuessWhoIam
 
         endpoints.MapHub<GameSignalRHubService>("/gamehub");
 
-        endpoints.MapHub<HallSignalRHubService>("/hallHub");
+        endpoints.MapHub<HallSignalRHubService>("/LobbyHub");
       });
     }
   }

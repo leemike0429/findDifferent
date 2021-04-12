@@ -24,7 +24,7 @@
             <h1> {{$t('index.titles[0]')}}<span>{{$t('index.titles[1]')}}</span>{{$t('index.titles[2]')}}</h1>
           </div>
           <div class="button-group">
-            <a href="~/html/Hall.html"><img src="~/images/icon.png" alt="">{{$t('index.hall')}}</a>
+            <a href="~/html/Lobby.html"><img src="~/images/icon.png" alt="">{{$t('index.hall')}}</a>
             <br>
             <button data-toggle="modal" data-target="#exampleModal">
               <img src="~/images/icon.png" alt="">{{$t('index.rule')}}
@@ -33,7 +33,7 @@
             <button v-on:click="openSetting">
               <img src="~/images/icon.png" alt="">{{$t('index.choice')}}
             </button>
-            <div class="lang-area">
+            <div class="lang-area" v-show="isShow">
               <span v-for="lang in langs" v-on:click="changeLang(lang.value)" :class="{active:isShow}">{{lang.lang}}</span>
             </div>
           </div>

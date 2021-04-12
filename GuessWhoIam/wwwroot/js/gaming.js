@@ -2,6 +2,7 @@
 import userList from "./userList.js";
 import messages from './lang.js';
 
+const langObj = messages[`${localStorage.getItem('lang')}`];
 let $bus = new Vue(); //用於傳遞同層之間資料的接駁車(event bus)
 
 Vue.component("loading", {
@@ -100,7 +101,6 @@ Vue.component("user-list", {
         ...user,
         roomId: sessionStorage.getItem("roomId")
       }
-      console.log(userData)
 
       this.postApi("getPoint", userData);
       this.getPointAnimation(user);
@@ -186,7 +186,7 @@ Vue.component("user-list", {
     }
   },
   created() {
-    document.title = messages[`${localStorage.getItem('lang')}`].userlist.header;
+    document.title = langObj.userlist.header;
     this.removeRoom();
     this.countToTwo();
     this.name = sessionStorage.getItem("player");
@@ -284,7 +284,7 @@ Vue.component("find-difference", {
                             <span class="answer" :class="borderStyle(obj)" :style="commonStyles(obj)" @click="select(obj)" v-for="obj in answer"></span>
                         </div>
                     </div>
-                            <img src="https://secure.gravatar.com/avatar/14d0bb5591e39cdc7c086de1bd5e7c7b?s=300&d=identicon&r=g" v-if="block" style="width: 70vw;height:75vh;z-index:100;position:absolute;top:23%;left:15%;">
+                            <img src="https://secure.gravatar.com/avatar/14d0bb5591e39cdc7c086de1bd5e7c7b?s=300&d=identicon&r=g" v-if="block" style="width: 70vw;height:75vh;z-index:100;position:absolute;top:23%;left:15%;" >
             </div>
         </div>
     </section>
@@ -343,7 +343,7 @@ Vue.component("find-difference", {
         $bus.$emit("GetPoint", 1); //[畫面]發通知，自己的得分 + 1
         this.postApi("getbugstatus", {
           name: this.userInfo.name,
-          id: obj.id,
+          bugId: obj.id,
           roomId: sessionStorage.getItem("roomId")
         }); //[signalR]發通知，給群組該玩家得分
       }
@@ -390,14 +390,15 @@ Vue.component("find-difference", {
       this.block = true;
       setTimeout(() => {
         this.block = false
-      }, 25000000)
+      }, 2500)
     });
     $bus.$on("TimeUp", parameter => {
       this.isEnd = parameter
     });
 
-    this.conn.on("GetBugStatus", (name, id) => {
-      this.answer.find(x => x.id == id).selected = name;
+    this.conn.on("GetBugStatus", (name, bugId) => {
+      let a = this.answer.find(x => x.id == bugId);
+      this.answer.find(x => x.id == bugId).selected = name;
     })
   },
   watch: {
@@ -455,10 +456,10 @@ Vue.component("timer", {
     },
     addTime() {
       if (this.userInfo.time <= 35) {
-        this.userInfo.time += 6000;
+        this.userInfo.time += 6;
       }
       else {
-        this.userInfo.time = 41000;
+        this.userInfo.time = 41;
       }
     },
     getUserInfo() {
@@ -530,81 +531,51 @@ Vue.component("waiting-room", {
   props: ["conn", "me", "prepareword", "preparingword", "preparedword", "exit", "send"],
   data: function () {
     return {
-      users: messages[`${localStorage.getItem('lang')}`].waitingroom.users,
+      totalPeopleNumber: 4,
+      userIndexs:[0,1,2,3],
       waitingList: [],
       selectedUsers: [],
       userName: "",
       msgs: [],
       info: "",
-      canReady: false
+      canReady: false,
     }
   },
   methods: {
     getWaitingUser() {
       let roomList = JSON.parse(localStorage.getItem("roomList")) || [];
-      let roomId = sessionStorage.getItem("roomId");
-      let playerList;
+      const roomId = sessionStorage.getItem("roomId");
+      let playerListIndex = roomList.findIndex(x => x.roomId == roomId);
+      let index, random;
 
-      if (roomList.length == 0) {
-        let random = Math.trunc(Math.random() * this.users.length);
-        this.userName = this.users[random];
-        playerList = [];
-        playerList.push(this.userName);
-        let room = {
-          roomId,
-          playerList
-        }
-        roomList.push(room);
+      if (playerListIndex == -1) {
+        index = random = Math.trunc(Math.random() * this.totalPeopleNumber);
+        this.userName = langObj.waitingroom.users[random];
       } else {
-        let playerIndex = roomList.findIndex(x => x.roomId == roomId);
-        let random = Math.trunc(Math.random() * this.users.length);
-        this.userName = this.users[random];
-        if (playerIndex != -1) {
-          playerList = roomList[playerIndex].playerList;
-
-          if (playerList.includes(this.userName)) {
-            let newUsers = this.users.filter(x => !playerList.includes(x));
-            let newRandom = Math.trunc(Math.random() * newUsers.length);
-            this.userName = newUsers[newRandom];
-          } // 判斷角色是否已存在
-
-          playerList.push(this.userName); //存入當前角色
-
-          let room = {
-            roomId,
-            playerList
-          }
-          roomList.splice(playerIndex, 1, room); //更新房間名單
-        } else {
-          let random = Math.trunc(Math.random() * this.users.length);
-          this.userName = this.users[random];
-          playerList = [];
-          playerList.push(this.userName);
-          let room = {
-            roomId,
-            playerList
-          }
-          roomList.push(room);
-        }
+        let playerList = roomList[playerListIndex].playerList;
+        let leftUsers = this.userIndexs.filter(x => {
+          return !playerList.includes(x + 1);
+        });
+        random = Math.trunc(Math.random() * leftUsers.length);
+        index = leftUsers[random];
+        this.userName = langObj.waitingroom.users[index];
       }
 
-
       if (this.userName != null && this.userName != "" && this.userName != undefined && roomId != null && roomId != "" && roomId != undefined) {
-        localStorage.setItem("roomList", JSON.stringify(roomList)); //存放當前角色到角色群
+        
         sessionStorage.setItem("player", this.userName); //存取當前使用者的角色
         this.conn.start()
           .then(() => {
             let roomId = sessionStorage.getItem("roomId");
-            this.conn.invoke("Connection", roomId, this.userName);
+            this.conn.invoke("Connection", roomId, index + 1);
           })
           .catch((err) => {
             console.log(err);
           })
       } else if (roomId == null || roomId == undefined || roomId == "") {
-        window.location.href = "/html/hall.html"
+        window.location.href = "/html/Lobby.html"
       } else {
         window.location.href = "/html/gaming.html"
-        console.log(roomId, this.userName)
       }
     },
     imageUrl(imageName) {
@@ -624,13 +595,13 @@ Vue.component("waiting-room", {
       });
       this.removeRole();
 
-      window.location.href = "/html/hall.html";
+      window.location.href = "/html/Lobby.html";
     },
     prepare() {
       let status = !this.waitingList.find(x => x.name == this.userName).isReady;
       this.waitingList.find(x => x.name == this.userName).isReady = status;
       axios.post("../api/signalr/prepare", {
-        name: this.userName,
+        id: userList.find(x => x.name == this.userName).id,
         status: status,
         roomId: sessionStorage.getItem("roomId")
       });
@@ -646,7 +617,7 @@ Vue.component("waiting-room", {
       let roomId = sessionStorage.getItem("roomId");
       let playerListIndex = roomList.findIndex(x => x.roomId == roomId);
       let playerList = roomList[playerListIndex].playerList;
-      let playerIndex = playerList.findIndex(x => x == this.userName);
+      let playerIndex = langObj.waitingroom.users.findIndex(x => x == this.userName);
 
       if (playerIndex != -1) {
         playerList.splice(playerIndex, 1);
@@ -675,58 +646,53 @@ Vue.component("waiting-room", {
     }
   },
   created() {
-    document.title = messages[`${localStorage.getItem('lang')}`].waitingroom.header;
+    document.title = langObj.waitingroom.header;
 
     this.getWaitingUser();
 
     this.conn.on("GetWaitingUsers", playerList => {
-      let playerListArr = playerList.map(x => x.name);
-      let roomList = JSON.parse(localStorage.getItem("roomList"));
-      let roomId = sessionStorage.getItem("roomId");
-      let playerListIndex = roomList.findIndex(x => x.roomId == roomId);
-      let players = roomList[playerListIndex].playerList;
-
-      players = players.filter(x => {
-        return x != null && playerListArr.includes(x);
-      })
-      let room = {
-        roomId,
-        playerList: players
-      }
-
-      roomList.splice(playerListIndex, 1, room);
-      localStorage.setItem("roomList", JSON.stringify(roomList));
-
       userList.forEach(x => x.isReady = false);
-
-      this.waitingList = playerListArr.map(x => {
-        return userList.find(y => y.name == x);
+      let roomList = JSON.parse(localStorage.getItem("roomList")) || [];
+      const roomId = sessionStorage.getItem("roomId");
+      let playerListIndex = roomList.findIndex(x => x.roomId == roomId);
+      if (playerListIndex == -1) {
+        let room = {
+          roomId,
+          playerList : playerList.map(x=>x.id)
+        }
+        roomList.push(room);
+      } else {
+        roomList[playerListIndex].playerList = playerList.map(x => x.id);
+      }
+      localStorage.setItem("roomList", JSON.stringify(roomList)); //存放當前角色到角色群
+      this.waitingList = playerList.map(x => {
+        return userList.find(y => y.id ==  x.id);
       });
     })
 
-    this.conn.on("UserJoin", user => {
+    this.conn.on("UserJoin", index => {
       let msg = {
-        who: user,
-        info: `${ messages[`${localStorage.getItem('lang')}`].waitingroom.join}`
+        who: userList.find(x=>x.id == index).name,
+        info: `${langObj.waitingroom.join}`
       };
       this.msgs.push(msg);
     });
-    this.conn.on("GetMsg", (user,info) => {
+    this.conn.on("GetMsg", (index, info) => {
       let msg = {
-        who: user,
+        who: userList.find(x => x.id == index).name,
         info
       };
       this.msgs.push(msg);
     });
-    this.conn.on("UserLeave", user => {
+    this.conn.on("UserLeave", index => {
       let msg = {
-        who: user,
-        info: `${messages[`${localStorage.getItem('lang')}`].waitingroom.leave}`
+        who: userList.find(x => x.id == index).name,
+        info: `${langObj.waitingroom.leave}`
       };
       this.msgs.push(msg);
     });
-    this.conn.on("Prepare", (name, status) => {
-      this.waitingList.find(x => x.name == name).isReady = status;
+    this.conn.on("Prepare", (id, status) => {
+      this.waitingList.find(x => x.id == id).isReady = status;
     })
 
     window.addEventListener("beforeunload", () => { // 監聽即將離開前

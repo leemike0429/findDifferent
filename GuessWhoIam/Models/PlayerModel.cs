@@ -10,6 +10,7 @@ namespace GuessWhoIam.Models
   {
     public string Name { get; set; }
     public int Id { get; set; }
+    public int BugId { get; set; }
     public int Life { get; set; }
     public string Percentage { get; set; }
     public int Score { get; set; }
