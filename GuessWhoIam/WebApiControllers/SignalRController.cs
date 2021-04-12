@@ -41,7 +41,7 @@ namespace GuessWhoIam.WebApiControllers
     [HttpPost]
     public async Task Send(PlayerModel msg)
     {
-      await _countHub.Clients.Groups(msg.RoomId).SendAsync("GetMsg", msg.Name, msg.Msg);
+      await _countHub.Clients.Groups(msg.RoomId).SendAsync("GetMsg", msg.Id, msg.Msg);
     }
     [HttpPost]
     public async Task Over(PlayerModel player)

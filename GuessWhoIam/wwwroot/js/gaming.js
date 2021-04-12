@@ -556,6 +556,7 @@ Vue.component("waiting-room", {
         let leftUsers = this.userIndexs.filter(x => {
           return !playerList.includes(x + 1);
         });
+        console.log(leftUsers);
         random = Math.trunc(Math.random() * leftUsers.length);
         index = leftUsers[random];
         this.userName = langObj.waitingroom.users[index];
@@ -583,7 +584,7 @@ Vue.component("waiting-room", {
     },
     sendMsg() {
       axios.post("../api/signalr/send", {
-        name: this.userName,
+        id: userList.find(x=>x.name == this.userName).id,
         msg: this.info,
         roomId: sessionStorage.getItem("roomId")
       });
