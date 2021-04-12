@@ -34,7 +34,7 @@ Vue.component("Lobby", {
             </div>
         </div>
     </section>`,
-  props: ["conn", "hall", "back", "title", "confirm", "create", "roomname"],
+  props: ["conn", "hall", "back", "title", "confirm", "create", "roomname","warning"],
   data() {
     return {
       roomList: [],
@@ -62,7 +62,7 @@ Vue.component("Lobby", {
     createRoom() {
       let roomId = this.roomId;
       if (this.roomList.find(x => x.roomId == roomId)) {
-        alert("房號與別人撞房囉!!!!");
+        alert(this.warning);
         this.roomId = "";
       } else {
         this.conn.invoke("CreateRoom", roomId);
