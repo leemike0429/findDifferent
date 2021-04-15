@@ -16,47 +16,48 @@
   <div class="wrap animate-bg animate bg" id="app"  v-cloak>
     <h1>{{$t('result.result')}}</h1>
     <canvas id="canvas"></canvas>
-    <div class="rank">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">{{$t('result.rank')}}</th>
-            <th scope="col">{{$t('result.player')}}</th>
-            <th scope="col">{{$t('result.score')}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="item in arrayData">
-            <th scope="row"><i class="fas fa-trophy"></i></th>
-            <td>{{item.name}}</td>
-            <td>
-              {{item.score}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <!--<div class="back">
+    <div class="backBtn"><a href="/Home/Index">{{$t('result.back')}}</a></div>
+          <div class="rank">
+              <table class="table">
+                  <thead>
+                      <tr>
+                          <th scope="col">{{$t('result.rank')}}</th>
+                          <th scope="col">{{$t('result.player')}}</th>
+                          <th scope="col">{{$t('result.score')}}</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr v-for="item in arrayData">
+                          <th scope="row"><i class="fas fa-trophy"></i></th>
+                          <td>{{item.name}}</td>
+                          <td>
+                              {{item.score}}
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          <!--<div class="back">
         <a href="/html/Room.html"><img src="../images/icon.png" alt="" v-on:click="removeLocalStorage">遊戲大廳</a>
         <a href="/html/Room.html"><img src="../images/icon.png" alt="">遊戲房間</a>
     </div>-->
-    <div class="awardsStage">
-      <img src="../images/awardsStage.png" alt="awards">
-    </div>
+          <div class="awardsStage">
+              <img src="../images/awardsStage.png" alt="awards">
+          </div>
 
-    <div v-for="item in preThirdArr" :class="item.attribute">
-      <img :src="imageUrl(item)" :alt="item.name_en">
-    </div>
+          <div v-for="item in preThirdArr" :class="item.attribute">
+              <img :src="imageUrl(item)" :alt="item.name_en">
+          </div>
 
-    <div class="loserPart">
-      <div class="grab">
-        <img src="../images/grabingFinger.png" alt="grab">
+          <div class="loserPart">
+              <div class="grab">
+                  <img src="../images/grabingFinger.png" alt="grab">
+              </div>
+              <div class="loser">
+                  <img :src="loserPic" alt="loser">
+              </div>
+          </div>
       </div>
-      <div class="loser">
-        <img :src="loserPic" alt="loser">
-      </div>
-    </div>
-  </div>
 
 
 

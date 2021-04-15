@@ -18,7 +18,7 @@ var gmaeResult = new Vue({
     this.$i18n.locale = this.locale; // 設定語言
     document.title = messages[`${localStorage.getItem('lang')}`].result.header;
     this.getRankData();
-    this.setTimeOut();
+ /*   this.setTimeOut();*/
     window.addEventListener("beforeonload", () => {
       this.removeLocalStorage();
     })
@@ -28,12 +28,12 @@ var gmaeResult = new Vue({
   },
 
   methods: {
-    setTimeOut() {
-      setTimeout(() => {
-        window.location.href = "/Home/Index";
-        localStorage.removeItem('result');
-      }, 5000)
-    },
+    //setTimeOut() {
+    //  setTimeout(() => {
+    //    window.location.href = "/Home/Index";
+    //    localStorage.removeItem('result');
+    //  }, 5000)
+    //},
     imageUrl(user) {
       return `../images/${user.name_en}_win.gif`
     },

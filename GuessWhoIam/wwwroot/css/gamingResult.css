@@ -59,14 +59,29 @@ canvas {
     border-radius: 15px;
     padding: 10px 10px 0px 10px;
 }
-
-.awardsStage {
-    width: 35%;
+.backBtn {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -10%);
+    top: 10%;
+    right: 10%;
+    border: 5px solid rgb(255, 227, 102);
+    background-color: #d4ccba;
+    border-radius: 15px;
+    padding: 10px 20px;
 }
+    .backBtn a {
+        color: #212223;
+        text-decoration: none;
+    }
+    .backBtn:hover a {
+        text-decoration: underline;
+    }
+    .awardsStage {
+        width: 35%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -10%);
+    }
 
     .awardsStage img,
     .WinnerFirst img,
