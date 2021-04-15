@@ -127,7 +127,8 @@ namespace GuessWhoIam.Models
 
   public class RoomList
   {
-    private List<RoomConfig> _roomList;
+    private static readonly object block = new object();
+    private static List<RoomConfig> _roomList;
 
     public string RoomId { get; set; }
 
@@ -137,16 +138,22 @@ namespace GuessWhoIam.Models
     }
     public void AddRoom(RoomConfig room)
     {
-      _roomList.Add(room);
+      lock (block)
+      {
+        _roomList.Add(room);
+      }
     }
     public void RemoveRooom()
     {
       if (_roomList.Any(x => x.Room.GetList().Count == 0))
       {
-        var rooms = _roomList.Where(x => x.Room.GetList().Count == 0);
-        foreach (var room in rooms)
+        lock (block)
         {
-          _roomList.Remove(room);
+          var rooms = _roomList.Where(x => x.Room.GetList().Count == 0);
+          foreach (var room in rooms)
+          {
+            _roomList.Remove(room);
+          }
         }
       }
     }

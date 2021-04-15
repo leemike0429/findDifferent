@@ -19,4 +19,8 @@
     <Folder Include="wwwroot\css\scss\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Protocols.MessagePack" Version="5.0.5" />
+  </ItemGroup>
+
 </Project>

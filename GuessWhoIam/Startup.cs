@@ -27,11 +27,10 @@ namespace GuessWhoIam
     {
       services.AddControllersWithViews();
 
-      services.AddSingleton<PlayerList>();
       services.AddSingleton<GameConfigList>();
       services.AddSingleton<RoomList>();
 
-      services.AddSignalR();
+      services.AddSignalR().AddMessagePackProtocol();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -87,8 +87,8 @@ Vue.component("Lobby", {
       this.conn.on("GetRoomList", roomList => {
         this.roomList = roomList.map(x => {
           return ({
-            roomId: x.roomId,
-            count: x.count
+            roomId: x.RoomId,
+            count: x.Count
           })
         })
       })
@@ -120,7 +120,7 @@ let app = new Vue({
   }),
   data() {
     return {
-      conn: new signalR.HubConnectionBuilder().withUrl("/LobbyHub").build(),
+      conn: new signalR.HubConnectionBuilder().withUrl("/LobbyHub").withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol()).build(),
       locale: localStorage.getItem('lang') || 'tw',
     }
   },

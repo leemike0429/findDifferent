@@ -313,10 +313,10 @@ Vue.component("find-difference", {
       let roomId = sessionStorage.getItem("roomId");
       this.conn.invoke("StartGame", roomId); //[signalR]於房間編號???；開始遊戲，
 
-      this.conn.on("StartGame", ({
-        topicIndex,
-        themeId
-      }) => { //[signalR]取得該場遊戲的隨機題目
+      this.conn.on("StartGame", ({ topicIndex, themeId}) => {
+        //[signalR]取得該場遊戲的隨機題目  
+        console.log("aaaa")
+        console.log(topicIndex, themeId)
         this.topic.id = topicIndex; // 3題中哪一題
         this.topic.name = this.topics[themeId]; //題目代號
         this.getOriginUrl();
@@ -556,7 +556,6 @@ Vue.component("waiting-room", {
         let leftUsers = this.userIndexs.filter(x => {
           return !playerList.includes(x + 1);
         });
-        console.log(leftUsers);
         random = Math.trunc(Math.random() * leftUsers.length);
         index = leftUsers[random];
         this.userName = langObj.waitingroom.users[index];
@@ -769,7 +768,7 @@ let app = new Vue({
   }),
   data: function () {
     return {
-      conn: new signalR.HubConnectionBuilder().withUrl("/gamehub").build(),
+      conn: new signalR.HubConnectionBuilder().withUrl("/gamehub").withHubProtocol(new signalR.protocols.msgpack.MessagePackHubProtocol()).build(),
       person: 0,
       transitionAtive: false,
       locale: localStorage.getItem('lang') || 'tw'

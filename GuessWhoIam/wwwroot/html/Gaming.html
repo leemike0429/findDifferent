@@ -19,21 +19,21 @@
       <h1>{{$t('warning')}}</h1>
     </div>
     <div id="block" v-if="block"
-      style="position:absolute;top:0;width:100vw;height:100vh;z-index:100;background-color:black">
+         style="position:absolute;top:0;width:100vw;height:100vh;z-index:100;background-color:black">
       <loading></loading>
-      <waiting-room :conn="conn" 
-                    :me="$t('waitingroom.me')" 
-                    :prepareword="$t('waitingroom.prepareWord')" 
-                    :preparingword="$t('waitingroom.preparingWord')" 
-                    :preparedword="$t('waitingroom.preparedWord')" 
+      <waiting-room :conn="conn"
+                    :me="$t('waitingroom.me')"
+                    :prepareword="$t('waitingroom.prepareWord')"
+                    :preparingword="$t('waitingroom.preparingWord')"
+                    :preparedword="$t('waitingroom.preparedWord')"
                     :exit="$t('waitingroom.exit')"
-        :send="$t('waitingroom.send')" @change-page="parentChangePage" v-if="person != 4"></waiting-room>
+                    :send="$t('waitingroom.send')" @change-page="parentChangePage" v-if="person != 4"></waiting-room>
       <div v-else>
         <transition name="fade">
           <count-down v-if="transitionAtive == false" @transition="transitionHandler"></count-down>
           <div v-else>
             <user-list :conn="conn"
-                       :me="$t('userlist.me')" ></user-list>
+                       :me="$t('userlist.me')"></user-list>
             <find-difference :conn="conn"></find-difference>
             <timer :conn="conn"
                    :sec="$t('timer.sec')"></timer>
@@ -43,12 +43,14 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
-    crossorigin="anonymous"></script>
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.12/vue.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-i18n/8.24.2/vue-i18n.min.js"></script>
   <script src="../lib/signalr/dist/browser/signalr.min.js"></script>
+  <script src="../lib/msgpack5/msgpack5.js"></script>
+  <script src="../lib/signalr/dist/browser/signalr-protocol-msgpack.js"></script>
   <script type="module" src="../js/gaming.js"></script>
 
 </body>
