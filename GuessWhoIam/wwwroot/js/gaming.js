@@ -458,10 +458,10 @@ Vue.component("timer", {
         },
         addTime() {
             if (this.userInfo.time <= 35) {
-                this.userInfo.time += 60000;
+                this.userInfo.time += 6;
             }
             else {
-                this.userInfo.time = 41000;
+                this.userInfo.time = 41;
             }
         },
         getUserInfo() {
