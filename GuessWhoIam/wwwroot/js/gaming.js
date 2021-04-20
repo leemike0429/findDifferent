@@ -277,7 +277,7 @@ Vue.component("find-difference", {
                             <span class="answer" :class="borderStyle(obj)" :style="commonStyles(obj)" @click="select(obj)" v-for="obj in answer"></span>
                         </div>
                     </div>
-                            <img src="https://secure.gravatar.com/avatar/14d0bb5591e39cdc7c086de1bd5e7c7b?s=300&d=identicon&r=g" v-if="block" style="width:1100px;height:600px;background-color:black;z-index:100;position:absolute;top:120px;left:200px;display:flex;justify-content:center" >
+                            <img src="../images/Block.gif" v-if="block" style="width: 70vw;height:75vh;z-index:100;position:absolute;top:23%;left:15%;" >
             </div>
         </div>
     </section>
