@@ -203,8 +203,8 @@ Vue.component("user-list", {
       this.users.find(x => x.name == name).timerPercentage = percentage;
     });
 
-    this.conn.on("Attack", (attacker, card, attacked) => { //[SignalR] 接收來自其他人的卡片效果
-      this.users.find(x => x.name == attacker).cards.find(x => x.id == card).isUsed = true;
+      this.conn.on("Attack", (attacker, card, attacked) => { //[SignalR] 接收來自其他人的卡片效果
+          this.users.find(x => x.name == attacker).cards.find(x => x.id == card && x.isUsed == false).isUsed = true;
       switch (card) {
         case 1://阻擋卡id=1
           if (this.name == attacked) {
