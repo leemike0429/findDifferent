@@ -27,8 +27,6 @@ namespace GuessWhoIam.Services
     {
       await base.OnDisconnectedAsync(exception);
 
-      var allRoom = _roomList.GetAllRoom();
-
       PlayerModel player = new();
 
       RoomConfig playerRoom = new();
@@ -36,17 +34,19 @@ namespace GuessWhoIam.Services
 
       lock (block)
       {
+        var allRoom = _roomList.GetAllRoom();
+
         foreach (var room in allRoom)
         {
-          if (room.Room.GetPlayer(Context.ConnectionId) != null)
+          if (room.PlayerList.GetPlayer(Context.ConnectionId) != null)
           {
-            player = room.Room.GetPlayer(Context.ConnectionId);
+            player = room.PlayerList.GetPlayer(Context.ConnectionId);
 
-            if (room.Room.GetList().Contains(player))
+            if (room.PlayerList.GetList().Contains(player))
             {
               playerRoom = room;
             }
-            room.Room.RemoveList(Context.ConnectionId);
+            room.PlayerList.RemovePlayer(Context.ConnectionId);
           }
         }
         _roomList.RemoveRooom();
@@ -55,42 +55,68 @@ namespace GuessWhoIam.Services
 
       await Clients.Group(groupName).SendAsync("UserLeave", player.Id);
 
-      if (playerRoom.Room.GetList().Count != 0)
+      if (playerRoom.PlayerList.GetList().Count != 0)
       {
-        await Clients.Group(groupName).SendAsync("GetWaitingUsers", playerRoom.Room.GetList().Select(x => new { id = x.Id }).ToList());
+        await Clients.Group(groupName).SendAsync("GetWaitingUsers", playerRoom.PlayerList.GetList().Select(x => new { id = x.Id }).ToList());
       }
     }
 
-    public async Task Connection(string groupName, int? index)
+    public async Task Connection(string groupName)
     {
-      if (string.IsNullOrEmpty(groupName) || groupName == "undefined" || index == null)
+      if (string.IsNullOrEmpty(groupName) || groupName == "undefined")
       {
         throw new Exception("不正常連線");
       }
+      RoomConfig room;
+      int[] leftList = new int[0];
 
-      var player = new PlayerModel
-      {
-        ConnectId = Context.ConnectionId,
-        Id = (int)index
-      };
-
-      var room = _roomList.SearchRoom(groupName);
-
-      if (room == null)
-      {
-        throw new Exception("連線異常");
-      }
       lock (block)
       {
-        room.Room.AddList(player);
+        room = _roomList.SearchRoom(groupName);
+
+        if(room == null)
+        {
+          room = new RoomConfig();
+        } 
+        else if (room.PlayerList.GetList().Count <= 4)
+        {
+          leftList = room.PlayerList.GetLeftList();
+        }
+        else
+        {
+          throw new Exception("人數已滿");
+        }
       }
 
       await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
 
-      await Clients.Group(groupName).SendAsync("UserJoin", (int)index);
-
-      await Clients.Group(groupName).SendAsync("GetWaitingUsers", room.Room.GetList().Select(x => new { id = x.Id }).ToList());
+      await Clients.Group(groupName).SendAsync("GetLeftList", leftList);
     }
+
+    public async Task RecordPlayer(string groupName,int id)
+    {
+      if (string.IsNullOrEmpty(groupName) || groupName == "undefined")
+      {
+        throw new Exception("不正常連線");
+      }
+      RoomConfig room;
+      PlayerModel player = new();
+
+      lock (block)
+      {
+        room = _roomList.SearchRoom(groupName);
+
+        if (room != null)
+        {
+          player.ConnectId = Context.ConnectionId;
+          player.Id = id;
+          room.PlayerList.AddPlayer(player);
+        }
+      }
+      await Clients.Group(groupName).SendAsync("UserJoin",id);
+
+      await Clients.Group(groupName).SendAsync("GetWaitingUsers", room.PlayerList.GetList().Select(x => new { id = x.Id }).ToList());
+  }
 
     public async Task StartGame(string groupName)
     {

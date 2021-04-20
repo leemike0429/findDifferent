@@ -18,6 +18,7 @@ namespace GuessWhoIam.Models
     public string Msg { get; set; }
     public bool Status { get; set; }
     public string RoomId { get; set; }
+    public int Index { get; set; }
   }
 
   public class GameConfig
@@ -30,7 +31,7 @@ namespace GuessWhoIam.Models
 
   public class RoomConfig
   {
-    public PlayerList Room { get; set; }
+    public PlayerList PlayerList { get; set; }
     public string RoomId { get; set; }
   }
 
@@ -43,32 +44,36 @@ namespace GuessWhoIam.Models
   public class PlayerList
   {
     private List<PlayerModel> _list;
+    private List<int> _totalList = new List<int> { 1, 2, 3, 4 };
 
     public PlayerList()
     {
       _list = new List<PlayerModel>();
     }
-    public void AddList(PlayerModel user)
+    public void AddPlayer(PlayerModel user)
     {
-      _list.Add(user);
-    }
-    public List<PlayerModel> GetList()
-    {
-      return _list;
-    }
-    public PlayerModel GetPlayer(string connectId)
-    {
-      return _list.FirstOrDefault(x => x.ConnectId == connectId);
-    }
-
-    public void RemoveList(string connectId)
-    {
-      var result = _list.FirstOrDefault(x => x.ConnectId == connectId);
-      if(result != null)
+      if (!_list.Any(x=>x.Id == user.Id))
       {
-        _list.Remove(result);
+        _list.Add(user);
       }
 
+    }
+
+    public int[] GetLeftList()
+    {
+      var list = GetList();
+      var currentList = list.Select(x => x.Id).ToList();
+      var leftList = _totalList.Except(currentList).ToArray();
+
+      return leftList;
+    }
+    public List<PlayerModel> GetList() => _list;
+    public PlayerModel GetPlayer(string connectId) => _list.FirstOrDefault(x => x.ConnectId == connectId);
+
+    public void RemovePlayer(string connectId)
+    {
+      var result = _list.FirstOrDefault(x => x.ConnectId == connectId);
+      if (result != null) _list.Remove(result);
     }
   }
 
@@ -85,17 +90,14 @@ namespace GuessWhoIam.Models
       _configs.Add(config);
     }
 
-    public List<GameConfig> GetList()
-    {
-      return _configs;
-    }
+    public List<GameConfig> GetList() => _configs;
+
 
     public GameConfig GetGameConfig(string roomId)
     {
-
-      if (_configs.Any(x=>x.RoomId == roomId))
+      if (_configs.Any(x => x.RoomId == roomId))
       {
-        return _configs.FirstOrDefault(x=>x.RoomId == roomId);
+        return _configs.FirstOrDefault(x => x.RoomId == roomId);
       }
       else
       {
@@ -103,7 +105,7 @@ namespace GuessWhoIam.Models
 
         var randomId = new Random().Next(1, 5);
         int[] cardarray = new int[4];
-        Random Random = new Random();
+        Random Random = new();
         for (int i = 0; i <= 3; i++)
         {
           int temp = Random.Next(2, 5);
@@ -127,10 +129,8 @@ namespace GuessWhoIam.Models
 
   public class RoomList
   {
-    private static readonly object block = new object();
+    private static readonly object block = new();
     private static List<RoomConfig> _roomList;
-
-    public string RoomId { get; set; }
 
     public RoomList()
     {
@@ -143,13 +143,14 @@ namespace GuessWhoIam.Models
         _roomList.Add(room);
       }
     }
+
     public void RemoveRooom()
     {
-      if (_roomList.Any(x => x.Room.GetList().Count == 0))
+      lock (block)
       {
-        lock (block)
+        if (_roomList.Any(x => x.PlayerList.GetList().Count == 0))
         {
-          var rooms = _roomList.Where(x => x.Room.GetList().Count == 0);
+          var rooms = _roomList.Where(x => x.PlayerList.GetList().Count == 0);
           foreach (var room in rooms)
           {
             _roomList.Remove(room);
@@ -159,30 +160,23 @@ namespace GuessWhoIam.Models
     }
 
     public List<RoomData> GetRooms()
-    {
-      return _roomList.Select(x => new RoomData
+    { 
+      var result = _roomList.Select(x => new RoomData
       {
-        Count = x.Room.GetList().Count,
+        Count = x.PlayerList.GetList().Count,
         RoomId = x.RoomId
       }).ToList();
+      return result;
     }
+    
 
-    public List<RoomConfig> GetAllRoom()
-    {
-      return _roomList;
-    }
+    public List<RoomConfig> GetAllRoom() => _roomList;
+
     public RoomConfig SearchRoom(string roomId)
     {
       var result = _roomList.FirstOrDefault(x => x.RoomId == roomId);
 
-      if (result != null)
-      {
-        return result;
-      }
-      else
-      {
-        return null;
-      }
+      return result;
     }
   }
 }

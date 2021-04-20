@@ -18,10 +18,7 @@ namespace GuessWhoIam.Services
 
     public override async Task OnConnectedAsync()
     {
-
-      await Clients.All.SendAsync("GetRoomList", _roomList.GetRooms());
-
-      await base.OnConnectedAsync();
+      await UpdateRoomInfo();
     }
 
     public override async Task OnDisconnectedAsync(Exception exception)
@@ -34,19 +31,19 @@ namespace GuessWhoIam.Services
       var room = new RoomConfig
       {
         RoomId = roomId,
-        Room = new PlayerList()
+        PlayerList = new PlayerList()
       };
 
       _roomList.AddRoom(room);
 
-      await Clients.All.SendAsync("GetRoomList", _roomList.GetRooms());
+      await UpdateRoomInfo();
     }
 
     public async Task AddToRoom(string roomId)
     {
       var room = _roomList.GetRooms().FirstOrDefault(x => x.RoomId == roomId);
 
-      await Clients.All.SendAsync("GetRoomList", _roomList.GetRooms());
+      await UpdateRoomInfo();
     }
 
     public async Task UpdateRoomInfo()
