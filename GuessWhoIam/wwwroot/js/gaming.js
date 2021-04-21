@@ -253,7 +253,7 @@ Vue.component("user-list", {
       localStorage.setItem("result", JSON.stringify(result));
 
       setTimeout(() => {
-        //window.location.replace("/html/GamingResult.html");
+        window.location.replace("/html/GamingResult.html");
       }, 2000)
     })
   }
