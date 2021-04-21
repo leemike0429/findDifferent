@@ -10,9 +10,9 @@ namespace GuessWhoIam.Models
        
         public class Attack
         {
-            public string Attacker { get; set; }
+            public int Attacker { get; set; }
             public int Card { get; set; }
-            public string Attacked { get; set; }
+            public int Attacked { get; set; }
             public string RoomId { get; set; }
         }
         public enum CardCategoryID

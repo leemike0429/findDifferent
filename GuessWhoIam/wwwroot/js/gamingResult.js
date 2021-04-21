@@ -30,8 +30,8 @@ var gmaeResult = new Vue({
   methods: {
     setTimeOut() {
       setTimeout(() => {
-        window.location.href = "/Home/Index";
         localStorage.removeItem('result');
+        window.location.href = "/Home/Index";
       }, 1000)
     },
     imageUrl(user) {
