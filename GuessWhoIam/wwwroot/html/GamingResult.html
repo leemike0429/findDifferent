@@ -16,7 +16,7 @@
   <div class="wrap animate-bg animate bg" id="app"  v-cloak>
     <h1>{{$t('result.result')}}</h1>
     <canvas id="canvas"></canvas>
-    <div class="backBtn"><a href="/Home/Index">{{$t('result.back')}}</a></div>
+    <div class="backBtn" v-on:click="setTimeOut"><a href="/Home/Index">{{$t('result.back')}}</a></div>
           <div class="rank">
               <table class="table">
                   <thead>

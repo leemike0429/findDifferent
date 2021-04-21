@@ -26,14 +26,14 @@ var gmaeResult = new Vue({
   computed: {
     loserPic() { return `../images/${this.loserArray.name_en}_loser.gif` },
   },
-
+  
   methods: {
-    //setTimeOut() {
-    //  setTimeout(() => {
-    //    window.location.href = "/Home/Index";
-    //    localStorage.removeItem('result');
-    //  }, 5000)
-    //},
+    setTimeOut() {
+      setTimeout(() => {
+        window.location.href = "/Home/Index";
+        localStorage.removeItem('result');
+      }, 1000)
+    },
     imageUrl(user) {
       return `../images/${user.name_en}_win.gif`
     },

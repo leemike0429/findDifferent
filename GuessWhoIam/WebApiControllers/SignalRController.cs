@@ -26,17 +26,17 @@ namespace GuessWhoIam.WebApiControllers
     [HttpPost]
     public async Task ReduceLife(PlayerModel user)
     {
-      await _countHub.Clients.Groups(user.RoomId).SendAsync("ReduceLife", user.Name, user.Life);
+      await _countHub.Clients.Groups(user.RoomId).SendAsync("ReduceLife", user.Id, user.Life);
     }
     [HttpPost]
     public async Task GetPoint(PlayerModel user)
     {
-      await _countHub.Clients.Groups(user.RoomId).SendAsync("GetPoint", user.Name, user.Score);
+      await _countHub.Clients.Groups(user.RoomId).SendAsync("GetPoint", user.Id, user.Score);
     }
     [HttpPost]
     public async Task GetBugStatus(PlayerModel bug)
     {
-      await _countHub.Clients.Groups(bug.RoomId).SendAsync("GetBugStatus", bug.Name, bug.BugId);
+      await _countHub.Clients.Groups(bug.RoomId).SendAsync("GetBugStatus", bug.Id, bug.BugId);
     }
     [HttpPost]
     public async Task Send(PlayerModel msg)
@@ -46,12 +46,12 @@ namespace GuessWhoIam.WebApiControllers
     [HttpPost]
     public async Task Over(PlayerModel player)
     {
-      await _countHub.Clients.Groups(player.RoomId).SendAsync("Over", player.Name);
+      await _countHub.Clients.Groups(player.RoomId).SendAsync("Over", player.Id);
     }
     [HttpPost]
     public async Task Timer(PlayerModel timer)
     {
-      await _countHub.Clients.Groups(timer.RoomId).SendAsync("Timer", timer.Name, timer.Percentage);
+      await _countHub.Clients.Groups(timer.RoomId).SendAsync("Timer", timer.Id, timer.Percentage);
     }
     [HttpPost]
     public async Task PrePare(PlayerModel player)

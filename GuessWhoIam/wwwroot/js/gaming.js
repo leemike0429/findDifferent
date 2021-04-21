@@ -101,7 +101,6 @@ Vue.component("user-list", {
         ...user,
         roomId: sessionStorage.getItem("roomId")
       }
-
       this.postApi("getPoint", userData);
       this.getPointAnimation(user);
     },
@@ -191,16 +190,16 @@ Vue.component("user-list", {
       }
     });
     
-    this.conn.on("Reducelife", (name, lifePoint) => { //[SignalR] 接收來自其他人的生命變化
-      this.users.find(x => x.name == name).life = lifePoint;
+    this.conn.on("Reducelife", (id, lifePoint) => { //[SignalR] 接收來自其他人的生命變化
+      this.users.find(x => x.id == id).life = lifePoint;
     });
 
-    this.conn.on("GetPoint", (name, score) => { //[SignalR] 接收來自其他人的分數變化
-      this.users.find(x => x.name == name).score = score;
+    this.conn.on("GetPoint", (id, score) => { //[SignalR] 接收來自其他人的分數變化
+      this.users.find(x => x.id == id).score = score;
     });
 
-    this.conn.on("Timer", (name, percentage) => { //[SignalR] 接收來自其他人的時間變化
-      this.users.find(x => x.name == name).timerPercentage = percentage;
+    this.conn.on("Timer", (id, percentage) => { //[SignalR] 接收來自其他人的時間變化
+      this.users.find(x => x.id == id).timerPercentage = percentage;
     });
 
       this.conn.on("Attack", (attacker, card, attacked) => { //[SignalR] 接收來自其他人的卡片效果
@@ -254,7 +253,7 @@ Vue.component("user-list", {
       localStorage.setItem("result", JSON.stringify(result));
 
       setTimeout(() => {
-        window.location.replace("/html/GamingResult.html");
+        //window.location.replace("/html/GamingResult.html");
       }, 2000)
     })
   }
@@ -329,10 +328,10 @@ Vue.component("find-difference", {
     select(obj) {
       if (this.isEnd == true) return;
       if (obj.selected == "") {
-        obj.selected = this.userInfo.name;
+        obj.selected = this.userInfo.id;
         $bus.$emit("GetPoint", 1); //[畫面]發通知，自己的得分 + 1
         this.postApi("getbugstatus", {
-          name: this.userInfo.name,
+          id: this.userInfo.id,
           bugId: obj.id,
           roomId: sessionStorage.getItem("roomId")
         }); //[signalR]發通知，給群組該玩家得分
@@ -348,9 +347,6 @@ Vue.component("find-difference", {
         opacity: obj.selected != "" ? 1 : 0,
         transform: obj.selected != "" ? "scale(1)" : "scale(2)"
       })
-    },
-    borderStyle(obj) {
-      return obj.selected == "" ? "" : obj.selected == this.userInfo.name ? "myself" : "others"
     },
     errorClickHandler() {
       if (this.isEnd == true) return;
@@ -371,6 +367,9 @@ Vue.component("find-difference", {
     },
     postApi(url, obj) {
       axios.post(`../api/signalr/${url}`, obj);
+    },
+    borderStyle(obj) {
+      return obj.selected == "" ? "" : obj.selected == this.userInfo.id.toString() ? "myself" : "others"
     }
   },
   created() {
@@ -387,7 +386,6 @@ Vue.component("find-difference", {
     });
 
     this.conn.on("GetBugStatus", (name, bugId) => {
-      let a = this.answer.find(x => x.id == bugId);
       this.answer.find(x => x.id == bugId).selected = name;
     })
   },
@@ -430,14 +428,14 @@ Vue.component("timer", {
         this.userInfo.time -= 1;
         this.getPercentage();
         this.postApi("Timer", {
-          name: this.userInfo.name,
+          id: userList.find(x=>x.name == this.userInfo.name).id,
           percentage: this.percentage,
           roomId: sessionStorage.getItem("roomId")
         });
         if (this.userInfo.time == 0) {
           $bus.$emit("TimeUp", true);
           this.postApi("Over", {
-            name: this.userInfo.name,
+            id: userList.find(x => x.name == this.userInfo.name).id,
             roomId: sessionStorage.getItem("roomId")
           });
           clearInterval(this.timer);
@@ -454,7 +452,6 @@ Vue.component("timer", {
     },
     getUserInfo() {
       this.userInfo = userList.find(x => x.name == sessionStorage.getItem("player"));
-      console.log(this.userInfo)
     },
     getPercentage() {
       this.percentage = `${this.userInfo.time / this.userInfo.totalTime * 100}%`;
